@@ -12,7 +12,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java8.util.stream.Stream;
+import java8.util.stream.StreamSupport;
+import java8.util.stream.Collectors;
 
 /**
  * Standard implementation for {@code CqlMigrator}
@@ -50,9 +52,11 @@ final class CqlMigratorImpl implements CqlMigrator {
         Preconditions.checkNotNull(keyspace, "'keyspace' property should be provided having value of the cassandra keyspace");
         Preconditions.checkNotNull(directoriesProperty, "'directories' property should be provided having value of the comma separated list of paths to cql files");
 
-        Collection<Path> directories = Arrays.stream(directoriesProperty.split(","))
+        Collection<Path> directories = StreamSupport.stream(Arrays.asList(directoriesProperty.split(",")))
                 .map(Paths::get)
                 .collect(Collectors.toList());
+
+        LOGGER.info("directories {}", directories);
 
         CqlMigratorFactory.create(CassandraLockConfig.builder().build())
                 .migrate(hosts.split(","), port == null ? 9042 : Integer.parseInt(port), username, password, keyspace, directories);

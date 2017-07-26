@@ -1,6 +1,6 @@
 package uk.sky.cqlmigrate;
 
-import java.time.Duration;
+import org.threeten.bp.Duration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeoutException;
 

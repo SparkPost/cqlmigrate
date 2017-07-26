@@ -6,7 +6,8 @@ import uk.sky.cqlmigrate.exception.ClusterUnhealthyException;
 
 import java.net.InetAddress;
 import java.util.List;
-import java.util.stream.Collectors;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 
 class ClusterHealth {
 
@@ -18,8 +19,8 @@ class ClusterHealth {
 
     void check() throws ClusterUnhealthyException {
 
-        List<InetAddress> unhealthyHosts = cluster.getMetadata().getAllHosts()
-                .stream()
+        List<InetAddress> unhealthyHosts = StreamSupport
+                .stream(cluster.getMetadata().getAllHosts())
                 .filter(host -> !host.isUp())
                 .map(Host::getAddress)
                 .collect(Collectors.toList());

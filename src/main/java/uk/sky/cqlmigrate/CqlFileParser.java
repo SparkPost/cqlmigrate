@@ -26,7 +26,7 @@ class CqlFileParser {
     private static final String CQL_MULTI_LINE_COMMENT_OPEN = "/*"; //Forward slash asterisk
     private static final String CQL_MULTI_LINE_COMMENT_CLOSE = "*/"; //Asterisk forward slash
     private static final Pattern CQL_MULTI_LINE_COMMENT_PATTERN = Pattern.compile("/\\*.*?\\*/", Pattern.DOTALL);
-    private static final Pattern EOL = Pattern.compile(".*\\R|.+\\z");
+    private static final Pattern EOL = Pattern.compile(".*\\u000D\\u000A|.*[\\u000A\\u000B\\u000C\\u000D\\u0085\\u2028\\u2029]|.+\\z");
     private static final String EMPTY_STR = "";
 
     static List<String> getCqlStatementsFrom(Path cqlPath) {

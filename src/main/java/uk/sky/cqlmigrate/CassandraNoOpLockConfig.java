@@ -2,7 +2,7 @@ package uk.sky.cqlmigrate;
 
 import com.datastax.driver.core.Session;
 
-import java.time.Duration;
+import org.threeten.bp.Duration;
 
 public class CassandraNoOpLockConfig extends LockConfig {
 

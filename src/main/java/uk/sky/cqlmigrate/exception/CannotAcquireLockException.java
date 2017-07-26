@@ -2,7 +2,7 @@ package uk.sky.cqlmigrate.exception;
 
 import uk.sky.cqlmigrate.LockConfig;
 
-import java.time.Duration;
+import org.threeten.bp.Duration;
 
 /**
  * Thrown if any of the queries to acquire lock fail or

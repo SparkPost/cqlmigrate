@@ -4,7 +4,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSortedMap;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,12 +11,18 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.StreamSupport;
+import java8.util.stream.Stream;
+import java8.util.stream.StreamSupport;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class CqlPaths {
 
     private static final String BOOTSTRAP_CQL = "bootstrap.cql";
     private static final String CQL_FILE_FILTER = "*.cql";
+    private static final Logger LOGGER = LoggerFactory.getLogger(CqlMigratorImpl.class);
+
 
     private final ImmutableSortedMap<String, Path> sortedCqlPaths;
 
@@ -28,13 +33,15 @@ class CqlPaths {
     static CqlPaths create(Collection<Path> directories) {
         Map<String, Path> cqlPathsMap = new HashMap<>();
 
-        directories.stream()
+        StreamSupport.stream(directories)
                 .forEach( directory -> {
                     try( DirectoryStream<Path> directoryStream = directoryStreamFromPath(directory)) {
-                        StreamSupport.stream(directoryStream.spliterator(), false)
-                                .forEach(path -> addPathToMap(cqlPathsMap, path));
+                      for (Path path : directoryStream) {
+                        addPathToMap(cqlPathsMap, path);
+                      }
                     } catch(IOException e){
-                        throw new UncheckedIOException(e);
+                      LOGGER.error("Error creating migrations {}", e);
+                      throw Throwables.propagate(e);
                     }
                 });
 
@@ -51,7 +58,7 @@ class CqlPaths {
     }
 
     public void applyInSortedOrder(Function function) {
-        sortedCqlPaths.keySet().stream()
+        StreamSupport.stream(sortedCqlPaths.keySet())
                 .filter(filename -> !filename.equals(BOOTSTRAP_CQL))
                 .forEach(filename -> function.apply(filename, sortedCqlPaths.get(filename)));
     }

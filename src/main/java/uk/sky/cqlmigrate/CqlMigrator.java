@@ -6,7 +6,7 @@ import uk.sky.cqlmigrate.exception.CannotReleaseLockException;
 import uk.sky.cqlmigrate.exception.ClusterUnhealthyException;
 
 import java.nio.file.Path;
-import java.time.Duration;
+import org.threeten.bp.Duration;
 import java.util.Collection;
 
 /**

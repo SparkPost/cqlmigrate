@@ -4,6 +4,8 @@ import com.datastax.driver.core.SimpleStatement;
 import com.datastax.driver.core.exceptions.DriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ class CqlLoader {
             sessionContext.checkClusterHealth();
         }
         try {
-            cqlStatements.stream()
+            StreamSupport.stream(cqlStatements)
                     .map(stringStatement -> new SimpleStatement(stringStatement).setConsistencyLevel(sessionContext.getWriteConsistencyLevel()))
                     .forEach(statement -> {
                         LOGGER.debug("Executing cql statement {}", statement);
