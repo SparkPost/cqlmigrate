@@ -2,36 +2,23 @@
 
 # Cassandra CQL migration tool
 
-cqlmigrate is a library for performing schema migrations on a cassandra cluster.
+cqlmigrate is a library for performing schema migrations on a cassandra cluster.  This is based on [github.com/sky-uk/cqlmigrate](github.com/sky-uk/cqlmigrate), but with some additional abilities:
 
-It is best used as an application dependency, but can also be used standalone.
+1. The SkyUK project is built to run on JVM 8+, but C* 2.x is recommended to run on JVM 7+.  This project implements backported features in order to run on JVM 6+, which allows for running in more varied environments.
+2. Includes the awesome work from the (github.com/ssserj/cqlmigrate/)[github.com/ssserj/cqlmigrate/] fork in order to support CQL file comments.
+3. Includes a build target called `runtimeJar` which produces a standalone JAR with no external dependencies.  This is useful for running the project in CI environments / invoking without needing to wrap your own java code around this.
 
-## Adding as a Gradle dependency
+## Build for Standalone Usage
 
-```groovy
-repositories {
-    jcenter()
-}
-
-compile 'uk.sky:cqlmigrate:0.9.5'
+```
+git clone git@github.com:SparkPost/cqlmigrate.git && cd cqlmigrate
+gradle clean sourcesJar
 ```
 
-## Adding as a Maven dependency
+## Run migrations against standalone package
 
-```xml
-<repositories>
-    <repository>
-        <id>jcenter</id>
-        <name>jcenter</name>
-        <url>http://jcenter.bintray.com</url>
-    </repository>
-</repositories>
-
-<dependency>
-  <groupId>uk.sky</groupId>
-  <artifactId>cqlmigrate</artifactId>
-  <version>0.9.5</version>
-</dependency>
+```
+java -jar -Dhosts=localhost -Dport=9042 -Dkeyspace=test -Ddirectories=migrations build/libs/cqlmigrate-*-SNAPSHOT-runtime.jar
 ```
 
 ## Cassandra Prerequisites
