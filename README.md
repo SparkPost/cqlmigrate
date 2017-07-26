@@ -12,7 +12,7 @@ cqlmigrate is a library for performing schema migrations on a cassandra cluster.
 
 ```
 git clone git@github.com:SparkPost/cqlmigrate.git && cd cqlmigrate
-gradle clean sourcesJar
+gradle clean runtimeJar
 ```
 
 ## Run migrations against standalone package
