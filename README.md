@@ -5,7 +5,7 @@
 cqlmigrate is a library for performing schema migrations on a cassandra cluster.  This is based on [github.com/sky-uk/cqlmigrate](github.com/sky-uk/cqlmigrate), but with some additional abilities:
 
 1. The SkyUK project is built to run on JVM 8+, but C* 2.x is recommended to run on JVM 7+.  This project implements backported features in order to run on JVM 6+, which allows for running in more varied environments.
-2. Includes the awesome work from the (github.com/ssserj/cqlmigrate/)[github.com/ssserj/cqlmigrate/] fork in order to support CQL file comments.
+2. Includes the awesome work from the [github.com/ssserj/cqlmigrate/](github.com/ssserj/cqlmigrate/) fork in order to support CQL file comments.
 3. Includes a build target called `runtimeJar` which produces a standalone JAR with no external dependencies.  This is useful for running the project in CI environments / invoking without needing to wrap your own java code around this.
 
 ## Build for Standalone Usage
