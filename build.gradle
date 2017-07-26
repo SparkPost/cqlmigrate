@@ -6,12 +6,18 @@ plugins {
     id 'com.jfrog.bintray' version '1.6'
     id 'pl.allegro.tech.build.axion-release' version '1.3.4'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id "me.tatarka.retrolambda" version "3.7.0"
 }
 
 scmVersion {
     tag {
         prefix = ''
     }
+}
+
+retrolambda {
+  javaVersion JavaVersion.VERSION_1_7
+  defaultMethods true
 }
 
 group = 'uk.sky'
@@ -60,6 +66,8 @@ publishing {
 }
 
 repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
     mavenCentral()
 }
 
@@ -74,9 +82,15 @@ configurations {
 }
 
 dependencies {
+    compile 'me.tatarka:gradle-retrolambda:3.7.0'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.5'
     compile 'com.datastax.cassandra:cassandra-driver-core:3.1.0'
+    compile 'org.threeten:threetenbp:1.3.6'
     compile 'org.slf4j:slf4j-api:1.7.12'
-    compile 'com.google.code.findbugs:jsr305:3.0.0'
 
     testCompile 'org.apache.logging.log4j:log4j-core:2.2'
     testCompile 'junit:junit:4.12'
@@ -106,6 +120,19 @@ task sourcesJar(type: Jar) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
+}
+
+task runtimeJar (type: Jar) {
+    classifier = 'runtime'
+    from (sourceSets.main.output)
+    from {
+        (configurations.runtime + configurations.functional).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes 'Main-Class': 'uk.sky.cqlmigrate.CqlMigratorImpl'
+    }
 }
 
 task testJar (type: Jar) {
